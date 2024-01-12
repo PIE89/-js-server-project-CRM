@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import useFetch from "../useFetch";
 import { serverPath } from "../helpers/path";
 import CardInformation from "./CardInformation";
+import { $api } from "../api/$api";
 
 const Edit = () => {
   const { id } = useParams();
@@ -17,14 +18,25 @@ const Edit = () => {
   const deleteCard = (e) => {
     e.preventDefault();
 
-    fetch(serverPath + "requests/" + id, {
-      method: "DELETE",
-    }).then((res) => {
-      if (res.ok) {
-        navigate("/table");
-        console.log("Deleted Succesfully");
-      }
-    });
+    //   fetch(serverPath + "requests/" + id, {
+    //     method: "DELETE",
+    //   }).then((res) => {
+    //     if (res.ok) {
+    //       navigate("/table");
+    //       console.log("Deleted Succesfully");
+    //     }
+    //   });
+    // };
+
+    $api
+      .delete("requests/" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          navigate("/table");
+          console.log("Deleted Successfully");
+        }
+      })
+      .catch((error) => console.error("Error: ", error));
   };
 
   return (

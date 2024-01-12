@@ -4,6 +4,7 @@ import MainPanel from "./TableMainPanel";
 import TopStatusBar from "./TopStatusBar";
 import ProductSelect from "./ProductSelect";
 import { serverPath } from "../helpers/path";
+import { $api } from "../api/$api";
 
 const Table = () => {
   const [data, setData] = useState(null);
@@ -20,21 +21,37 @@ const Table = () => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      serverPath +
-        `requests?${filter.status === "all" ? "" : `status=${filter.status}&`}${
-          filter.product === "all" ? "" : `product=${filter.product}`
-        }`
-    )
-      .then((res) => res.json())
-      .then((result) => setData(result));
+    // fetch(
+    //   serverPath +
+    //     `requests?${filter.status === "all" ? "" : `status=${filter.status}&`}${
+    //       filter.product === "all" ? "" : `product=${filter.product}`
+    //     }`
+    // )
+    //   .then((res) => res.json())
+    //   .then((result) => setData(result));
+
+    $api
+      .get("requests", {
+        params: {
+          status: filter.status === "all" ? undefined : filter.status,
+          product: filter.product === "all" ? undefined : filter.product,
+        },
+      })
+      .then((res) => setData(res.data));
   }, [filter]);
 
   useEffect(() => {
-    fetch(serverPath + "requests?status=new")
-      .then((res) => res.json())
-      .then((result) => setStatusNew(result.length));
-  }, [filter]);
+    // fetch(serverPath + "requests?status=new")
+    //   .then((res) => res.json())
+    //   .then((result) => setStatusNew(result.length));
+    $api
+      .get("requests", {
+        params: {
+          status: "new",
+        },
+      })
+      .then((res) => setStatusNew(res.data.length));
+  }, []);
 
   return (
     <div>

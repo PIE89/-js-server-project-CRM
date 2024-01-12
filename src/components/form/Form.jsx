@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import getTestData from "../helpers/TestData";
-import { serverPath } from "../helpers/path";
+import { $api } from "../api/$api";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -33,11 +33,19 @@ const Form = () => {
       product,
     };
 
-    fetch(serverPath + "requests/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newArray),
-    }).then(() => console.log("New post was added"));
+    // fetch(serverPath + "requests/", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(newArray),
+    // }).then(() => console.log("New post was added"));
+    $api
+      .post("requests/", newArray, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(() => console.log("New post was added"))
+      .catch((error) => console.error("Error: ", error));
 
     setForm();
   };
